@@ -4,11 +4,9 @@ A **production-ready, real-time data pipeline** that ingests stock market data f
 
 **Status:** ✅ **90% Complete** | **Production Ready** 🚀
 
----
 
 ## 📊 Quick Demo
 
-```
 Finnhub API (Every 60s)
     ↓
 Stock Producer (Docker)
@@ -24,9 +22,6 @@ Snowflake Database
     └── MARTS_STOCKS.STOCK_ANALYTICS (Ready for dashboards)
     ↓
 Google Looker Studio (Beautiful dashboards!)
-```
-
----
 
 ## 🎯 Key Features
 
@@ -84,15 +79,12 @@ Google Looker Studio (Beautiful dashboards!)
 
 **Overall: 90% Complete** 🎉
 
----
-
 ## 🏗️ Architecture
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed system design.
 
 ### High-Level Flow
 
-```
 ┌─────────────┐     ┌──────────┐     ┌──────────┐     ┌──────────────┐
 │ Finnhub API │────▶│   Stock  │────▶│  Kafka   │────▶│   Airflow    │
 │ (60 sec)    │     │ Producer │     │  Topic   │     │  (5 min DAG) │
@@ -114,9 +106,6 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed system design.
                                                     │  Looker Studio   │
                                                     │  Dashboards      │
                                                     └──────────────────┘
-```
-
----
 
 ## 🚀 Quick Start (5 Minutes)
 
@@ -146,7 +135,6 @@ docker-compose up -d
 
 # 5. Verify services (should show 11 containers)
 docker-compose ps
-```
 
 **Done!** Your pipeline is running! 🎉
 
@@ -157,7 +145,6 @@ docker-compose ps
 - **Grafana:** http://localhost:3000 (admin/admin)
 - **Prometheus:** http://localhost:9090
 
----
 
 ## 📚 Documentation
 
@@ -165,11 +152,8 @@ docker-compose ps
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture & design
 - **[README.md](./README.md)** - This file
 
----
-
 ## 📁 Project Structure
 
-```
 stock-tracking-pipeline/
 │
 ├── docker-compose.yml              ← All services config
@@ -218,9 +202,6 @@ stock-tracking-pipeline/
 ├── logs/                          ← Application logs
 ├── docs/                          ← Additional documentation
 └── great-expectations/            ← Data quality (optional)
-```
-
----
 
 ## 🔧 Technology Stack
 
@@ -236,24 +217,17 @@ stock-tracking-pipeline/
 | **Container** | Docker Compose | Infrastructure |
 | **Language** | Python 3.11 | Code |
 
----
-
 ## 📊 Stocks Tracked
 
 By default, the pipeline tracks **10 stocks**:
 
-```
 AAPL (Apple)      GOOGL (Google)    MSFT (Microsoft)   AMZN (Amazon)
 TSLA (Tesla)      NVDA (NVIDIA)     META (Meta)        NFLX (Netflix)
 UBER (Uber)       COIN (Coinbase)
-```
 
 **Customize** by editing `STOCKS` in `secrets.env`:
 ```env
 STOCKS=AAPL,GOOGL,MSFT  # Your custom list
-```
-
----
 
 ## 📈 Data Pipeline
 
@@ -293,8 +267,6 @@ STOCKS=AAPL,GOOGL,MSFT  # Your custom list
 - Interactive dashboards with filters
 - Auto-refresh every 5 minutes
 
----
-
 ## 🔐 Security
 
 ### Credentials Management
@@ -312,8 +284,6 @@ STOCKS=AAPL,GOOGL,MSFT  # Your custom list
 - Use same password for all environments
 
 ### How It Works
-
-```
 secrets.env (local, git-ignored)
     ↓
 Environment variables
@@ -321,9 +291,6 @@ Environment variables
 docker-compose.yml references ${VAR_NAME}
     ↓
 Containers use credentials securely
-```
-
----
 
 ## 🚀 Deployment Steps
 
@@ -340,12 +307,10 @@ CREATE SCHEMA STOCKS_FIN.RAW_STOCKS;
 CREATE SCHEMA STOCKS_FIN.STG_STOCKS;
 CREATE SCHEMA STOCKS_FIN.INT_STOCKS;
 CREATE SCHEMA STOCKS_FIN.MARTS_STOCKS;
-```
 
 ### Step 3: Start Services
 ```bash
 docker-compose up -d
-```
 
 ### Step 4: Set Up DBT (Windows)
 ```powershell
@@ -355,7 +320,6 @@ pip install dbt-core==1.7.0 dbt-snowflake==1.7.0
 cp dbt/profiles.yml.example ~/.dbt/profiles.yml
 cd dbt
 dbt run
-```
 
 ### Step 5: Create Looker Studio Dashboard
 1. Go to https://lookerstudio.google.com
@@ -365,15 +329,12 @@ dbt run
 
 **See [SETUP.md](./SETUP.md) for detailed instructions.**
 
----
-
 ## 🧪 Verification
 
 ### Check Services Running
 ```bash
 docker-compose ps
 # Should show 11 containers all "Up"
-```
 
 ### Verify Data Flow
 ```bash
@@ -381,14 +342,11 @@ docker-compose ps
 SELECT COUNT(*) FROM STOCKS_FIN.RAW_STOCKS.STOCK_PRICES;
 SELECT COUNT(*) FROM STOCKS_FIN.MARTS_STOCKS.STOCK_ANALYTICS;
 # Should see 1000+ records in raw, 100+ in analytics
-```
 
 ### Check Airflow DAG
 1. Open http://localhost:8888
 2. Look for: `stock_data_ingestion_snowflake`
 3. Should show successful runs every 5 minutes
-
----
 
 ## 📊 Dashboards
 
@@ -406,8 +364,6 @@ SELECT COUNT(*) FROM STOCKS_FIN.MARTS_STOCKS.STOCK_ANALYTICS;
 - Airflow DAG status
 - Snowflake query performance
 
----
-
 ## 🔧 Troubleshooting
 
 ### Containers Not Starting
@@ -415,7 +371,6 @@ SELECT COUNT(*) FROM STOCKS_FIN.MARTS_STOCKS.STOCK_ANALYTICS;
 docker-compose logs -f
 # Check specific container:
 docker-compose logs airflow-webserver
-```
 
 ### Snowflake Connection Failed
 1. Verify account ID in `secrets.env` (format: XXXXXX-XXXXXX)
@@ -433,11 +388,8 @@ powershell -ExecutionPolicy Bypass -File .\load_env.ps1
 .\dbt_env\Scripts\Activate.ps1
 cd dbt
 dbt debug
-```
 
 **Full troubleshooting guide:** See [SETUP.md](./SETUP.md)
-
----
 
 ## 📚 Additional Resources
 
@@ -448,8 +400,6 @@ dbt debug
 - **Snowflake Docs:** https://docs.snowflake.com/
 - **Airflow Docs:** https://airflow.apache.org/docs/
 
----
-
 ## 🎯 Next Steps
 
 - [ ] Set up monitoring dashboards in Grafana
@@ -458,8 +408,6 @@ dbt debug
 - [ ] Implement Snowflake auto-clustering
 - [ ] Add more technical indicators to DBT
 - [ ] Deploy to production (AWS, GCP, Azure)
-
----
 
 ## 📞 Support
 
@@ -473,19 +421,13 @@ dbt debug
 - Check existing documentation
 - Review code comments
 
----
-
 ## 📄 License
 
 This project is licensed under the MIT License - see [LICENSE](./LICENSE) file for details.
 
----
-
 ## ⭐ Show Your Support
 
 If you found this project helpful, please give it a star! ⭐
-
----
 
 ## 👤 Author
 
@@ -493,13 +435,9 @@ Real-time stock tracking pipeline built with modern data stack.
 
 **Stack:** Finnhub → Kafka → Airflow → Snowflake → DBT → Looker Studio
 
----
-
 **Last Updated:** January 2025
 **Version:** 1.0.0
 **Status:** ✅ Production Ready
-
----
 
 ## 🗺️ Roadmap
 
@@ -516,5 +454,5 @@ Real-time stock tracking pipeline built with modern data stack.
 - [ ] Alert rules
 - [ ] Data quality checks
 
-
-
+# stock-tracking-pipeline
+Real-time stock tracking pipeline with Finnhub, Kafka, Airflow, Snowflake, DBT, and Looker Studio
