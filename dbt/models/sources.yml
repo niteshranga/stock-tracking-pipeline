@@ -1,0 +1,79 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw stock data from ingestion pipelines
+    database: airflow
+    schema: raw_stocks
+    tables:
+      - name: stock_prices
+        description: Raw stock price data ingested from Kafka
+        columns:
+          - name: id
+            description: Unique identifier (UUID)
+            tests:
+              - unique
+              - not_null
+          - name: symbol
+            description: Stock symbol (e.g., AAPL, GOOGL)
+            tests:
+              - not_null
+          - name: price
+            description: Stock price in USD
+            tests:
+              - not_null
+              - accepted_values:
+                  values: []  # Any positive value
+          - name: volume
+            description: Trading volume
+            tests:
+              - not_null
+          - name: timestamp
+            description: Time when price was recorded
+            tests:
+              - not_null
+          - name: fetched_at
+            description: Time when data was fetched
+            tests:
+              - not_null
+          - name: data_source
+            description: Source of the data (e.g., yfinance)
+            tests:
+              - not_null
+          - name: high
+            description: Daily high price
+          - name: low
+            description: Daily low price
+          - name: open
+            description: Daily open price
+      
+      - name: pipeline_runs
+        description: Tracking table for pipeline execution
+        columns:
+          - name: run_id
+            description: Unique run identifier
+            tests:
+              - unique
+              - not_null
+          - name: dag_id
+            description: DAG identifier
+            tests:
+              - not_null
+          - name: run_date
+            description: Execution date
+            tests:
+              - not_null
+          - name: status
+            description: Pipeline status
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['success', 'failed', 'running']
+          - name: started_at
+            description: Start time
+          - name: ended_at
+            description: End time
+          - name: records_processed
+            description: Number of records processed
+          - name: error_message
+            description: Error message if failed

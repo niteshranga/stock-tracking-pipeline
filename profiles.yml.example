@@ -1,0 +1,65 @@
+# DBT Profiles Configuration Template
+# Location: ~/.dbt/profiles.yml (Windows: C:\Users\[username]\.dbt\profiles.yml)
+# 
+# This file connects DBT to Snowflake
+# NEVER commit this file to GitHub! It's in .gitignore
+
+stock_analytics:
+  outputs:
+    dev:
+      # Snowflake Connection Details
+      # These use environment variables from secrets.env
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
+      schema: raw_stocks
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      
+      # Threading for parallel execution
+      threads: 4
+      
+      # Client session settings
+      client_session_keep_alive: False
+      
+  # Default target to use
+  target: dev
+
+# ==================== SETUP INSTRUCTIONS ====================
+#
+# 1. Create directory if it doesn't exist:
+#    mkdir ~/.dbt
+#
+# 2. Copy this file:
+#    cp dbt/profiles.yml.example ~/.dbt/profiles.yml
+#
+# 3. On Windows, create at:
+#    C:\Users\[your_username]\.dbt\profiles.yml
+#
+# 4. Environment variables from secrets.env will be used:
+#    - SNOWFLAKE_ACCOUNT
+#    - SNOWFLAKE_USER
+#    - SNOWFLAKE_PASSWORD
+#    - SNOWFLAKE_DATABASE
+#    - SNOWFLAKE_WAREHOUSE
+#    - SNOWFLAKE_ROLE
+#
+# 5. Load environment variables BEFORE running dbt:
+#    powershell -ExecutionPolicy Bypass -File .\load_env.ps1
+#
+# 6. Test connection:
+#    dbt debug
+#
+# ==================== IMPORTANT ====================
+#
+# ✅ This file uses environment variables
+#    So your actual credentials are NOT in this file!
+#
+# ❌ profiles.yml (actual file with credentials) is in .gitignore
+#    So it won't be accidentally committed to GitHub
+#
+# ✅ Only profiles.yml.example (this template) is in GitHub
+#    So others can copy it and fill in their own values
+#

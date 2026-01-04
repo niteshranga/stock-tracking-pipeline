@@ -1,0 +1,66 @@
+# Prometheus Configuration File
+
+global:
+  scrape_interval: 15s           # Default scrape interval
+  evaluation_interval: 15s       # Default evaluation interval
+  external_labels:
+    monitor: 'stock-etl-pipeline'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files:
+  # - "alert_rules.yml"
+
+scrape_configs:
+  # Prometheus server itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Airflow Webserver
+  - job_name: 'airflow-webserver'
+    static_configs:
+      - targets: ['airflow-webserver:8080']
+    metrics_path: '/admin/metrics/'
+    scrape_interval: 30s
+
+  # Airflow Scheduler
+  - job_name: 'airflow-scheduler'
+    static_configs:
+      - targets: ['airflow-scheduler:8080']
+    scrape_interval: 30s
+
+  # PostgreSQL (via postgres_exporter if available)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+    scrape_interval: 30s
+
+  # Kafka Broker (via jmx_exporter if available)
+  - job_name: 'kafka'
+    static_configs:
+      - targets: ['kafka:9999']
+    scrape_interval: 30s
+
+  # LocalStack
+  - job_name: 'localstack'
+    static_configs:
+      - targets: ['localstack:4566']
+    scrape_interval: 30s
+
+  # Grafana
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+    scrape_interval: 30s
+
+  # Custom application metrics (if exposed by producer)
+  - job_name: 'stock-producer'
+    static_configs:
+      - targets: ['stock-producer:8000']
+    scrape_interval: 30s
+    metrics_path: '/metrics'

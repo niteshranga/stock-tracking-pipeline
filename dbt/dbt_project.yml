@@ -1,0 +1,58 @@
+name: 'stock_analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'stock_analytics'
+
+model-paths: ["models"]
+test-paths: ["tests"]
+seed-paths: ["data"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  stock_analytics:
+    +database: STOCKS_FIN
+    staging:
+      +materialized: table
+      +schema: stg_stocks
+      +tags:
+        - staging
+    intermediate:
+      +materialized: table
+      +schema: int_stocks
+      +tags:
+        - intermediate
+    marts:
+      +materialized: table
+      +schema: marts_stocks
+      +tags:
+        - mart
+
+# Snowflake-specific configuration
+seeds:
+  +quote_columns: false
+
+quoting:
+  database: false
+  schema: false
+  identifier: false
+
+# Hooks for Snowflake
+on-run-start:
+  - "{{ log('Starting dbt run for Snowflake', info=true) }}"
+
+on-run-end:
+  - "{{ log('Completed dbt run for Snowflake', info=true) }}"
+
+# Variables
+vars:
+  # Stock pipeline variables
+  database: STOCKS_FIN
+  stock_symbols: "AAPL,GOOGL,MSFT,AMZN,TSLA,NVDA,META,NFLX,UBER,COIN"
+  data_fetch_interval: 60  # seconds
+  ingestion_frequency: 5   # minutes

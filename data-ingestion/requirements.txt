@@ -1,0 +1,36 @@
+# Data fetching (Stable, widely used)
+requests==2.31.0
+alpha-vantage==2.3.1
+pandas==2.0.3
+numpy==1.24.3
+
+# Message streaming (Production-tested)
+kafka-python==2.0.2
+confluent-kafka==2.2.0
+
+# Configuration & utilities
+python-dotenv==1.0.0
+pydantic==2.4.2
+pydantic-settings==2.0.3
+
+# Logging (Industry standard)
+python-json-logger==2.0.7
+structlog==23.2.0
+
+# Data validation
+jsonschema==4.19.1
+marshmallow==3.20.1
+
+# Error handling & retries
+tenacity==8.2.3
+requests==2.31.0
+
+# Type hints
+typing-extensions==4.8.0
+
+# Development
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-mock==3.12.0
+black==23.12.1
+flake8==6.1.0
